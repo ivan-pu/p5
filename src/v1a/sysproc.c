@@ -89,3 +89,9 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
+
+
+// system call the dump out the physmem array
+int sys_dump_physmem(void){
+    return -1;
+}

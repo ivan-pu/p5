@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="2304f0b2-9584-42b1-b419-c5938c7de018" name="CS Lab" url="http://royal-06.cs.wisc.edu">
+        <fileTransfer host="royal-06.cs.wisc.edu" port="22" rootFolder="/afs/.cs.wisc.edu/u/t/i/tianyuan/private/CS537/p5" accessType="SFTP">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
