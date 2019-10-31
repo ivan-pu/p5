@@ -99,5 +99,5 @@ int sys_dump_physmem(void){
     if (argptr(0, (void*)&frames, sizeof(*frames)) < 0||
     argptr(1, (void*)&pids, sizeof(*pids)) < 0 || argint(2, &numframes) < 0)
         return -1;
-    return dumpMem(frames,pids,numframes);
+    return dumpMem(frames, pids, numframes);
 }
