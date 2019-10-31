@@ -89,3 +89,15 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
+
+
+// system call the dump out the physmem array
+int sys_dump_physmem(void){
+    int *frames;
+    int *pids;
+    int numframes;
+    if (argptr(0, (void*)&frames, sizeof(*frames)) < 0||
+    argptr(1, (void*)&pids, sizeof(*pids)) < 0 || argint(2, &numframes) < 0)
+        return -1;
+    return dumpMem(frames, pids, numframes);
+}
