@@ -133,7 +133,7 @@ kalloc(void) {
     if (r) {
         kmem.freelist = r->next;
         int framenumber = (V2P(r) >> 12) & 0xffff;
-        cprintf("%d\n", framenumber);
+        //cprintf("%d\n", framenumber);
         add(framenumber, -2);
     }
     if (kmem.use_lock)
@@ -151,7 +151,7 @@ kalloc2(int pid) {
     if (r) {
         kmem.freelist = r->next;
         int framenumber = (V2P(r) >> 12) & 0xffff;
-        cprintf("%d\n", framenumber);
+        //cprintf("%d\n", framenumber);
         add(framenumber, pid);
     }
     if (kmem.use_lock)

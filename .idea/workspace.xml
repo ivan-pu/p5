@@ -9,7 +9,11 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="00539344-d80e-4c3f-805d-6204a52eee04" name="Default Changelist" comment="" />
+    <list default="true" id="00539344-d80e-4c3f-805d-6204a52eee04" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/v1a/kalloc.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/v1a/kalloc.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/v1b/kalloc.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/v1b/kalloc.c" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,7 +54,7 @@
       <option name="presentableId" value="Default" />
       <updated>1572473094629</updated>
       <workItem from="1572473095818" duration="1535000" />
-      <workItem from="1572474670894" duration="6558000" />
+      <workItem from="1572474670894" duration="9648000" />
     </task>
     <servers />
   </component>
