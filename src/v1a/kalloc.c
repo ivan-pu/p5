@@ -17,10 +17,17 @@ struct run {
   struct run *next;
 };
 
+//struct that keep track of frame number usage
+struct frameInfo{
+    int pid;
+    int frameNum;
+};
+
 struct {
   struct spinlock lock;
   int use_lock;
   struct run *freelist;
+  struct frameInfo *allocFrames[16384];
 } kmem;
 
 // Initialization happens in two phases.
@@ -91,5 +98,23 @@ kalloc(void)
   if(kmem.use_lock)
     release(&kmem.lock);
   return (char*)r;
+}
+
+int dumpMem(int *frames, int *pids, int numframes){
+    if(kmem.use_lock)
+        acquire(&kmem.lock);
+    for(int i = 0; i < numframes; i++){
+        /*test code
+        kmem.allocFrames[i]->frameNum = i;
+        kmem.allocFrames[i]->pid = i;
+        */
+
+        frames[i] = kmem.allocFrames[i]->frameNum;
+        pids[i] = kmem.allocFrames[i]->pid;
+    }
+    if(kmem.use_lock)
+        release(&kmem.lock);
+
+    return 0;
 }
 
