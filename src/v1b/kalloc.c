@@ -33,38 +33,25 @@ struct {
 struct frameInfo framelist[16384];
 static int endindex = 0;
 
-static void
-remove(int framenum) {
-    for (int i = 0; i < 16384; i++) {
-        if (framenum == framelist[i].frameNum) {
-            for (int j = i; framelist[j].frameNum != 0; j++) {
-                framelist[j] = framelist[j + 1];
-            }
-            endindex--;
-            break;
-        }
-    }
-}
+//static void
+//remove(int framenum) {
+//    for (int i = 0; i < 16384; i++) {
+//        if (framenum == framelist[i].frameNum) {
+//            for (int j = i; framelist[j].frameNum != 0; j++) {
+//                framelist[j] = framelist[j + 1];
+//            }
+//            endindex--;
+//            break;
+//        }
+//    }
+//}
 
 static void
 add(int framenum, int pid) {
-    if (endindex >= 16384) return;
-    for (int i = 0; i < 16384; i++) {
-        if (framelist[i].frameNum == 0) {
-            framelist[i].frameNum = framenum;
-            framelist[i].pid = pid;
-            endindex++;
-            break;
-        }
-        if (framenum > framelist[i].frameNum) {
-            for (int j = endindex; j > i; j--) {
-                framelist[j] = framelist[j - 1];
-            }
-            framelist[i].frameNum = framenum;
-            framelist[i].pid = pid;
-            endindex++;
-            break;
-        }
+    if (kmem.use_lock) {
+        if (endindex >= 16384) return;
+        framelist[endindex].frameNum = framenum;
+        framelist[endindex++].pid = pid;
     }
 }
 
@@ -91,8 +78,9 @@ void
 freerange(void *vstart, void *vend) {
     char *p;
     p = (char *) PGROUNDUP((uint) vstart);
-    for (; p + PGSIZE <= (char *) vend; p += PGSIZE)
+    for (; p + PGSIZE <= (char *) vend; p += PGSIZE) {
         kfree(p);
+    }
 }
 
 // Free the page of physical memory pointed at by v,
@@ -114,8 +102,8 @@ kfree(char *v) {
     r = (struct run *) v;
     r->next = kmem.freelist;
     kmem.freelist = r;
-    int framenumber = (V2P(v) >> 12) & 0xffff;
-    remove(framenumber);
+//    int framenumber = (V2P(v) >> 12) & 0xffff;
+//    remove(framenumber);
     if (kmem.use_lock)
         release(&kmem.lock);
 }
@@ -129,11 +117,10 @@ kalloc(void) {
 
     if (kmem.use_lock)
         acquire(&kmem.lock);
-    r = kmem.freelist->next;
+    r = kmem.freelist;
     if (r) {
-        kmem.freelist = r->next;
+        kmem.freelist = r->next->next;
         int framenumber = (V2P(r) >> 12) & 0xffff;
-        //cprintf("%d\n", framenumber);
         add(framenumber, -2);
     }
     if (kmem.use_lock)
@@ -147,11 +134,10 @@ kalloc2(int pid) {
 
     if (kmem.use_lock)
         acquire(&kmem.lock);
-    r = kmem.freelist->next;
+    r = kmem.freelist;
     if (r) {
-        kmem.freelist = r->next;
+        kmem.freelist = r->next->next;
         int framenumber = (V2P(r) >> 12) & 0xffff;
-        //cprintf("%d\n", framenumber);
         add(framenumber, pid);
     }
     if (kmem.use_lock)
@@ -160,6 +146,7 @@ kalloc2(int pid) {
 }
 
 int dumpMem(int *frames, int *pids, int numframes) {
+    if (!frames || !pids || !numframes) return -1;
     if (kmem.use_lock)
         acquire(&kmem.lock);
     for (int i = 0; i < numframes; i++) {
